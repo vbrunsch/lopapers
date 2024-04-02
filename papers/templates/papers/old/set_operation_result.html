@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Set Operation Result</title>
+</head>
+<body>
+    <h1>Set Operation Result</h1>
+    <ul>
+        {% for paper in result_set %}
+            <li>{{ paper.title }} - {{ paper.year }}</li>
+        {% empty %}
+            <li>No papers found.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'list_papers' %}" class="back-button">Back to list</a>
+</body>
+</html>

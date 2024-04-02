@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Groups</title>
+    <!-- Add any CSS links here -->
+</head>
+<body>
+    <form id="group-management-form" method="post" action="{% url 'delete_groups' %}">
+        {% csrf_token %}
+        {% for group in groups %}
+            <div>
+                <input type="checkbox" name="group_ids" value="{{ group.id }}">
+                <label>{{ group.name }}</label>
+            </div>
+        {% endfor %}
+        <button type="submit">Delete Selected Groups</button>
+    </form>
+</body>
+</html>

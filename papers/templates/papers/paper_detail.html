@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ paper.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <img src="{% static 'images/logo.png' %}" alt="Logo" style="width: 100px;">
+    <h1>{{ paper.title }}</h1>
+    <p><strong>Authors:</strong> {{ paper.authors }}</p>
+    <p><strong>Year:</strong> {{ paper.year }}</p>
+    <p><strong>Journal:</strong> {{ paper.journal }}</p>
+    <p><strong>DOI:</strong> {{ paper.doi }}</p>
+    <p><strong>Abstract:</strong> {{ paper.abstract }}</p>
+    <p><strong>Categories:</strong> {{ paper.categories }}</p>
+    <p><strong>Impact Factor:</strong> {{ paper.factor }}</p>
+    <p><strong>Citations:</strong> {{ paper.citations }}</p>
+    <!-- Back button -->
+    <a href="{% url 'list_papers' %}" class="back-button">Back to list</a>
+</body>
+</html>

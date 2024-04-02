@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>List of Papers</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .create-group-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+        }
+        /* Additional styles can be added here */
+    </style>
+</head>
+<body>
+    <img src="{% static 'images/logo.png' %}" alt="Logo" style="width: 100px;">
+    <h1>List of Papers</h1>
+
+    <div class="create-group-btn">
+        <a href="{% url 'create_group' %}" class="btn">Create New Group</a>
+    </div>
+
+    <!--Newly added-->
+    <form method="post" action="{% url 'create_group_from_selection' %}">
+        {% csrf_token %}
+        <input type="text" name="group_name" placeholder="Enter group name" required>
+        <!-- Hidden inputs for selected paper IDs will be inserted here by JavaScript -->
+        <button type="submit">Create New Group</button>
+    </form>
+
+    <a href="{% url 'perform_set_operation' %}">Perform Set Operations</a>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form');
+        document.querySelectorAll('.paper-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'paper_ids';
+                input.value = checkbox.value;
+                if (checkbox.checked) {
+                    form.appendChild(input);
+                } else {
+                    Array.from(form.querySelectorAll('input[name="paper_ids"]')).forEach(inp => {
+                        if (inp.value === checkbox.value) form.removeChild(inp);
+                    });
+                }
+            });
+        });
+    });
+    </script>
+    <!--Newly added-->
+
+
+    <!-- Search form -->
+    <form action="{% url 'list_papers' %}" method="get">
+        <input type="text" name="year" placeholder="Search by year">
+        <input type="text" name="keyword" placeholder="Search by keyword">
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Select/Unselect all checkbox -->
+    <div>
+        <input type="checkbox" id="select-all" onclick="selectAll(this)">
+        <label for="select-all">Select/Unselect All</label>
+    </div>
+
+    <ul>
+        {% for paper in papers %}
+        <li>
+            <input type="checkbox" class="paper-checkbox" value="{{ paper.id }}">
+            <!-- Add a link to the paper detail page -->
+            <a href="{% url 'paper_detail' pk=paper.id %}">{{ paper.title }}</a> - {{ paper.year }}
+        </li>
+        {% endfor %}
+    </ul>
+    
+
+    <script src="{% static 'js/script.js' %}"></script>
+    <script>
+        function selectAll(source) {
+            checkboxes = document.getElementsByClassName('paper-checkbox');
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,267 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>List of Papers</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .create-group-btn, .set-operation-form {
+            margin-top: 20px;
+        }
+        .detail-view {
+            display: none;
+            /* Add your styles for the detail view panel */
+        }
+        /* Additional styles */
+    </style>
+</head>
+<body>
+    <img src="{% static 'images/logo.png' %}" alt="Logo" style="width: 100px;">
+    <h1>List of Papers</h1>
+    
+    
+    <style>
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .left-side {
+            flex-grow: 1;
+        }
+        .right-side {
+            flex-grow: 1;
+            /* Adjust the max-width to suit your layout */
+            max-width: 600px;
+        }
+        /* You might need to adjust margins/paddings to fit your design */
+    </style>
+    <style>
+        .search-form {
+        margin-top: 20px;    
+        margin-bottom: 3px; /* Increase or decrease as needed */
+        }
+        .create-group-form, .select-all-div, .group-selection-form {
+        margin-top: 2px;    
+        margin-bottom: 3px; /* Increase or decrease as needed */
+        }
+        .set-operation-form .form-group {
+            display: flex;
+            align-items: center; /* Align items vertically */
+            margin-right: 15px; /* Adjust space between form groups */
+        }
+        .set-operation-form .form-group label,
+        .set-operation-form .form-group select {
+            margin-right: 10px; /* Adjust space between the label and the select box */
+        }
+        .set-operation-form form {
+            display: flex;
+            flex-wrap: wrap; /* Allow the form items to wrap if needed */
+            align-items: center; /* Align items vertically */
+            justify-content: space-between; /* Distribute space between and around content items */
+        }
+        .set-operation-form {
+            display: flex;
+            align-items: flex-start; /* Align the form to the top */
+            padding-top: 0; /* Adjust this value to align with the left side content */
+        }
+        .set-operation-form button {
+            margin-left: auto; /* Push the button to the right */
+            margin-top: 0; /* Align button with form fields */
+        }
+    </style>
+    
+    
+
+    
+    <div class="flex-container">
+        <div class="left-side">
+            <!-- Search form -->
+            <form action="{% url 'list_papers' %}" method="get" class="search-form">
+                <input type="text" name="query" placeholder="Enter search terms">
+                <button type="submit">Search</button>
+            </form>
+
+            <!-- <form action="{% url 'list_papers' %}" method="get" class="search-form">
+                 <input type="text" name="year" placeholder="Search by year"> 
+                <input type="text" name="keyword" placeholder="Search by keyword">
+                <button type="submit">Search</button>
+            </form>-->
+
+            <!-- Group Selection Dropdown -->
+            <form id="group-selection-form" class="group-selection-form">
+                <select id="group-selection-dropdown" name="group_selection">
+                    <option value="all">All Papers</option>
+                    {% for group in groups %}
+                        <option value="{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Show</button>
+            </form>
+    
+            <!-- Create new group -->
+            <form id="create-group-form" method="post" action="{% url 'create_group_from_selection' %}" class = "create-group-form">
+                {% csrf_token %}
+                <input type="text" name="group_name" placeholder="Enter new group name" required>
+                <!-- Hidden inputs for selected paper IDs will be inserted here by JavaScript -->
+                <button type="submit">Create New Group</button>
+            </form>
+    
+            <!-- Select/Unselect all checkbox -->
+            <div>
+                <input type="checkbox" id="select-all" onclick="selectAll(this)" class = "select-all-div">
+                <label for="select-all">Select/Unselect All</label>
+            </div>
+        </div>
+    
+        <div class="right-side">
+            <!-- Set Operations Form -->
+            <div class="set-operation-form">
+                <form id="set-operation-form" method="post" action="{% url 'list_papers' %}" class="flex-container">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ set_operation_form.operation.label_tag }}
+                        {{ set_operation_form.operation }}
+                    </div>
+                    <div class="form-group">
+                        {{ set_operation_form.group1.label_tag }}
+                        {{ set_operation_form.group1 }}
+                    </div>
+                    <div class="form-group">
+                        {{ set_operation_form.group2.label_tag }}
+                        {{ set_operation_form.group2 }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Perform Operation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Result Section -->
+    <div id="set-operation-result">
+        <!-- Results will be displayed here -->
+    </div>
+
+    <!-- Papers List -->
+    <ul>
+        {% for paper in papers %}
+        <li>
+            <input type="checkbox" class="paper-checkbox" value="{{ paper.id }}">
+            <a href="#" class="paper-link" data-paper-id="{{ paper.id }}">{{ paper.title }}</a> - {{ paper.authors }}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        function selectAll(source) {
+            checkboxes = document.getElementsByClassName('paper-checkbox');
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+    </script>
+
+    <!-- Detail View -->
+    <div id="paper-details" class="detail-view">
+        <!-- Paper details will be loaded here -->
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.paper-link').forEach(function(link) {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent the default link behavior
+                    const paperId = this.getAttribute('data-paper-id'); // Get the paper ID
+                    const listItem = this.closest('li'); // Get the parent list item of the clicked link
+                    let existingDetails = listItem.querySelector('.detail-view'); // Check for existing detail view
+
+                    // Toggle: remove if it exists
+                    if (existingDetails) {
+                        listItem.removeChild(existingDetails);
+                        return; // Stop further processing
+                    }
+
+                    // Proceed to create a new detail view if it doesn't exist
+                    existingDetails = document.createElement('div');
+                    existingDetails.className = 'detail-view';
+                    existingDetails.style.display = 'none'; // Start with detail view hidden
+
+                    // Populate the detail view with AJAX response
+                    fetch(`/papers/paper_detail_ajax/${paperId}/`)
+                        .then(response => response.json())                
+                        .then(data => {
+                            existingDetails.innerHTML = `
+                                <h3>${data.title}</h3>
+                                ${data.year ? `<p>Year: ${data.year}</p>` : ''} <!-- Conditionally display year -->
+                                <p>Authors: ${data.authors}</p>
+                                <p>Abstract: ${data.abstract}</p>
+                            `;
+                            listItem.appendChild(existingDetails); // Append details as a child of the list item
+                            existingDetails.style.display = 'block'; // Make the detail view visible
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            });
+    
+            // AJAX call for create group form
+            $('#create-group-form').submit(function(event) {
+                event.preventDefault(); // Prevent the form from submitting via the browser
+                var form = $(this);
+                
+                // Remove any existing paper_ids inputs to avoid duplicates
+                form.find('input[name="paper_ids"]').remove();
+
+                // For each checked paper checkbox, append a hidden input to the form
+                $('input[type="checkbox"].paper-checkbox:checked').each(function() {
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'paper_ids',
+                        value: $(this).val()
+                    }).appendTo(form);
+                });
+
+                var formData = form.serialize(); // Serialize the form data, including the dynamically added paper_ids
+                console.log(formData); // Log formData to ensure paper_ids are included
+
+                // Proceed with AJAX as before
+                $.ajax({
+                    url: form.attr('action'), // Use the form's action attribute as the URL
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        if(response.success) {
+                            alert("Group '" + response.groupName + "' created successfully.");
+                            // Dynamically add the new group to the dropdown menu
+                            var newOption = $('<option>').val(response.groupId).text(response.groupName);
+                            $('#group-selection-dropdown').append(newOption);
+                            $('#id_group1').append(newOption.clone());  // Assuming you have the ID of the dropdown
+                            $('#id_group2').append(newOption.clone());  // Replace 'id_of_group1/2_dropdown' with actual IDs
+                        } else {
+                            alert("Failed to create the group: " + response.error);
+                        }
+                    },
+                    error: function() {
+                        alert("An error occurred.");
+                    }
+                });
+            });
+            
+           
+
+
+
+
+
+            
+        });
+    </script>
+    
+    
+        
+</body>
+</html>
