@@ -94,8 +94,8 @@ def run_lda_clustering():
 
     # Exploring the optimal number of topics
     # Define a range for the number of topics
-    min_topics = 2
-    max_topics = 8
+    min_topics = 4
+    max_topics = 4
     step_size = 1
     topics_range = range(min_topics, max_topics + 1, step_size)
 
