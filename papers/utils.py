@@ -94,8 +94,8 @@ def run_lda_clustering():
 
     # Exploring the optimal number of topics
     # Define a range for the number of topics
-    min_topics = 4
-    max_topics = 4
+    min_topics = 3
+    max_topics = 8
     step_size = 1
     topics_range = range(min_topics, max_topics + 1, step_size)
 
@@ -186,6 +186,7 @@ def run_lda_clustering():
     #pyLDAvis.enable_notebook()
     vis = gensimvis.prepare(lda_model_optimal, corpus, dictionary)
     visualization_path = os.path.join(settings.MEDIA_ROOT, 'lda_visualization.html')
+    print(f"Saving LDA visualization to {visualization_path}")
     pyLDAvis.save_html(vis, visualization_path)
     
     # Save the visualization to an HTML file

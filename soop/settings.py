@@ -31,22 +31,22 @@ MEDIA_URL = '/media/'
 SECRET_KEY = 'django-insecure-rjq!)5f#g-y6$6ch!!9ch7vy1r!&&e348d7v^oxyp-5)s4hv8f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # Redirects all non-HTTPS requests to HTTPS (only enable if SSL is configured)
-SECURE_SSL_REDIRECT = True
+#SECURE_SSL_REDIRECT = True
 
 # Prevents the browser from rendering the page inside a frame or iframe
 # to avoid clickjacking attacks
-X_FRAME_OPTIONS = 'DENY'
+#X_FRAME_OPTIONS = 'DENY'
 
 # Enable browser's XSS filtering and prevent it from reporting XSS attacks
-SECURE_BROWSER_XSS_FILTER = True
+#SECURE_BROWSER_XSS_FILTER = True
 
 # Prevents the browser from identifying content types incorrectly
-SECURE_CONTENT_TYPE_NOSNIFF = True
+#SECURE_CONTENT_TYPE_NOSNIFF = True
 
-ALLOWED_HOSTS = ['lopapers.herokuapp.com','lopapers-778806eb15ac.herokuapp.com','localhost']
+ALLOWED_HOSTS = ['lopapers.herokuapp.com','lopapers-778806eb15ac.herokuapp.com','localhost','127.0.0.1']
 
 LOGGING = {
     'version': 1,
@@ -129,20 +129,21 @@ WSGI_APPLICATION = 'soop.wsgi.application'
 #    }
 #}
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'paps',
-#        'USER': 'vince',
-#        'PASSWORD': 'ovince',
-#        'HOST': 'localhost',
-#        'PORT': '5432',
-#    }
-#}
-
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'paps',
+        'USER': 'vince',
+        'PASSWORD': 'ovince',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
+
+# Change this to use PostgreSQL in production
+#DATABASES = {
+#    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+#}
 
 
 # Password validation
