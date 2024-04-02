@@ -1,3 +1,6 @@
+import dj_database_url
+import os
+
 """
 Django settings for soop project.
 
@@ -28,9 +31,22 @@ MEDIA_URL = '/media/'
 SECRET_KEY = 'django-insecure-rjq!)5f#g-y6$6ch!!9ch7vy1r!&&e348d7v^oxyp-5)s4hv8f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+# Redirects all non-HTTPS requests to HTTPS (only enable if SSL is configured)
+SECURE_SSL_REDIRECT = True
+
+# Prevents the browser from rendering the page inside a frame or iframe
+# to avoid clickjacking attacks
+X_FRAME_OPTIONS = 'DENY'
+
+# Enable browser's XSS filtering and prevent it from reporting XSS attacks
+SECURE_BROWSER_XSS_FILTER = True
+
+# Prevents the browser from identifying content types incorrectly
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+ALLOWED_HOSTS = ['lopapers.herokuapp.com']
 
 LOGGING = {
     'version': 1,
@@ -79,6 +95,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'soop.urls'
@@ -112,15 +129,19 @@ WSGI_APPLICATION = 'soop.wsgi.application'
 #    }
 #}
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'paps',
+#        'USER': 'vince',
+#        'PASSWORD': 'ovince',
+#        'HOST': 'localhost',
+#        'PORT': '5432',
+#    }
+#}
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'paps',
-        'USER': 'vince',
-        'PASSWORD': 'ovince',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
 
 
