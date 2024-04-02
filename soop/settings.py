@@ -46,7 +46,7 @@ SECURE_BROWSER_XSS_FILTER = True
 # Prevents the browser from identifying content types incorrectly
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
-ALLOWED_HOSTS = ['lopapers.herokuapp.com']
+ALLOWED_HOSTS = ['lopapers.herokuapp.com','lopapers-778806eb15ac.herokuapp.com','localhost']
 
 LOGGING = {
     'version': 1,
